@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyForge — Choose Your Battlefield</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #070711;
+      color: #e2e8f0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* BG */
+    .bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .bg-grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg,rgba(255,255,255,0.03) 1px,transparent 1px);
+      background-size: 40px 40px;
+    }
+    .orb { position: absolute; border-radius: 50%; filter: blur(140px); opacity: 0.15; animation: orbFloat 14s ease-in-out infinite; }
+    .orb-1 { width: 700px; height: 700px; background: #6366f1; top: -300px; left: -200px; }
+    .orb-2 { width: 600px; height: 600px; background: #f59e0b; bottom: -200px; right: -200px; animation-delay: 5s; }
+    .orb-3 { width: 400px; height: 400px; background: #10b981; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-delay: 9s; }
+    @keyframes orbFloat {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33% { transform: translate(40px,-30px) scale(1.06); }
+      66% { transform: translate(-30px,40px) scale(0.94); }
+    }
+
+    /* LAYOUT */
+    .page { position: relative; z-index: 1; flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 2rem; min-height: 100vh; }
+
+    /* HEADER */
+    .home-header { text-align: center; margin-bottom: 4rem; }
+    .brand { display: flex; align-items: center; justify-content: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+    .brand-icon { font-size: 2.5rem; }
+    .brand-name {
+      font-size: 2.5rem; font-weight: 900;
+      background: linear-gradient(135deg, #a78bfa 0%, #06b6d4 50%, #f59e0b 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      letter-spacing: -0.02em;
+    }
+    .home-tagline {
+      font-size: 1.1rem; color: #64748b; max-width: 500px; margin: 0 auto; line-height: 1.7;
+    }
+    .home-tagline strong { color: #94a3b8; }
+
+    /* QUOTE */
+    .home-quote {
+      font-size: 0.95rem; font-style: italic; color: #7c3aed;
+      text-align: center; margin-bottom: 3rem; max-width: 600px;
+      padding: 1rem 1.5rem;
+      background: rgba(124,58,237,0.08); border: 1px solid rgba(124,58,237,0.2);
+      border-radius: 12px;
+    }
+
+    /* CARDS GRID */
+    .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 900px; width: 100%; }
+    @media (max-width: 768px) { 
+      .cards-grid { grid-template-columns: 1fr; }
+      .page { padding: 1.5rem 1rem; }
+      .brand-name { font-size: 2rem; }
+      .home-tagline { font-size: 0.95rem; }
+      .home-quote { font-size: 0.85rem; padding: 1rem; margin-bottom: 2rem; }
+      .roadmap-card { padding: 1.5rem; gap: 1rem; border-radius: 20px; }
+      .card-icon { font-size: 2.5rem; }
+      .card-title { font-size: 1.3rem; }
+    }
+
+    .roadmap-card {
+      position: relative; overflow: hidden; cursor: pointer; text-decoration: none;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 28px; padding: 2.5rem;
+      transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+      display: flex; flex-direction: column; gap: 1.25rem;
+      group: true;
+    }
+    .roadmap-card::before {
+      content: ''; position: absolute; inset: 0;
+      background: var(--card-gradient);
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .roadmap-card::after {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--card-color);
+      opacity: 0; transition: opacity 0.4s;
+    }
+    .roadmap-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--card-border);
+      box-shadow: 0 20px 60px var(--card-shadow), 0 0 0 1px var(--card-border);
+    }
+    .roadmap-card:hover::before { opacity: 1; }
+    .roadmap-card:hover::after { opacity: 1; }
+
+    .card-da {
+      --card-color: linear-gradient(135deg, #6366f1, #8b5cf6);
+      --card-gradient: linear-gradient(135deg, rgba(99,102,241,0.08), rgba(139,92,246,0.04));
+      --card-border: rgba(99,102,241,0.4);
+      --card-shadow: rgba(99,102,241,0.25);
+    }
+    .card-ai {
+      --card-color: linear-gradient(135deg, #f59e0b, #ec4899);
+      --card-gradient: linear-gradient(135deg, rgba(245,158,11,0.08), rgba(236,72,153,0.04));
+      --card-border: rgba(245,158,11,0.4);
+      --card-shadow: rgba(245,158,11,0.2);
+    }
+
+    .card-icon { font-size: 3.5rem; line-height: 1; }
+    .card-tag {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em;
+      padding: 4px 12px; border-radius: 20px; border: 1px solid; width: fit-content;
+    }
+    .tag-da { color: #818cf8; border-color: rgba(99,102,241,0.3); background: rgba(99,102,241,0.1); }
+    .tag-ai { color: #fbbf24; border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.1); }
+    .tag-hot { color: #f87171; background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.3); margin-left: 0.4rem; animation: pulse 2s ease infinite; }
+    @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.6} }
+
+    .card-title { font-size: 1.6rem; font-weight: 900; color: #f1f5f9; letter-spacing: -0.02em; line-height: 1.2; }
+    .card-subtitle { font-size: 0.88rem; color: #64748b; line-height: 1.6; }
+    .card-modules {
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .module-pill {
+      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.78rem; color: #94a3b8; padding: 0.3rem 0;
+    }
+    .module-pill::before { content: '▸'; opacity: 0.4; flex-shrink: 0; }
+    .module-pill.highlight { color: #f1f5f9; font-weight: 600; }
+    .module-pill.highlight::before { color: #a78bfa; opacity: 1; }
+
+    .card-cta {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: auto; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.06);
+    }
+    .cta-text { font-size: 0.8rem; font-weight: 700; color: #64748b; }
+    .cta-arrow {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; transition: all 0.3s; color: #94a3b8;
+    }
+    .roadmap-card:hover .cta-arrow { background: var(--card-border); color: #fff; transform: translateX(4px); }
+
+    /* FOOTER QUOTE */
+    .home-footer { text-align: center; margin-top: 3rem; font-size: 0.8rem; color: #334155; }
+  </style>
+</head>
+<body>
+
+  <div class="bg-canvas">
+    <div class="bg-grid"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="page">
+    <div class="home-header">
+      <div class="brand">
+        <span class="brand-icon">⚡</span>
+        <span class="brand-name">StudyForge</span>
+      </div>
+      <p class="home-tagline">Your personal interview battle station. <strong>Choose your roadmap</strong>, track every topic, upload notes, and conquer your interviews.</p>
+    </div>
+
+    <div class="home-quote">
+      "Do not yield to unmanliness, O Arjuna. It does not become you. Shake off your faint-heartedness and <strong>arise.</strong>"
+      <br/><span style="font-size:0.78rem;opacity:0.6;margin-top:0.4rem;display:block">— Krishna, Bhagavad Gita 2.3</span>
+    </div>
+
+    <div class="cards-grid">
+
+      <!-- Card 1: Data Analyst -->
+      <a href="index.html" class="roadmap-card card-da">
+        <div>
+          <span class="card-tag tag-da">📊 Active Interview</span>
+        </div>
+        <div class="card-icon">🗄️</div>
+        <div class="card-title">Data Analyst<br/>Power BI Role</div>
+        <div class="card-subtitle">SQL, Power BI, DAX, ETL, Azure, Excel, Case Studies — complete interview preparation with progress tracking.</div>
+        <div class="card-modules">
+          <div class="module-pill highlight">Module 1 — SQL (Critical)</div>
+          <div class="module-pill highlight">Module 2 — Power BI (Critical)</div>
+          <div class="module-pill">Module 3 — Excel</div>
+          <div class="module-pill">Module 4 — ETL</div>
+          <div class="module-pill">Module 5 — Azure</div>
+          <div class="module-pill">Module 6 — Data Analytics</div>
+          <div class="module-pill highlight">Module 7 — Case Studies</div>
+        </div>
+        <div class="card-cta">
+          <span class="cta-text">7 Modules · Progress Tracked</span>
+          <span class="cta-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- Card 2: Agentic AI -->
+      <a href="agentic.html" class="roadmap-card card-ai">
+        <div style="display:flex;align-items:center;gap:0.5rem">
+          <span class="card-tag tag-ai">🤖 New Interview</span>
+          <span class="card-tag tag-hot">🔥 HOT</span>
+        </div>
+        <div class="card-icon">🧠</div>
+        <div class="card-title">Agentic AI<br/>Builder Role</div>
+        <div class="card-subtitle">LangChain, LangGraph, RAG, Vector DB, FastAPI, Voice Agents, Automation — your resume already matches 80% of the JD.</div>
+        <div class="card-modules">
+          <div class="module-pill highlight">Module 7 — RAG (Critical)</div>
+          <div class="module-pill highlight">Module 8 — Agentic AI (Critical)</div>
+          <div class="module-pill">Module 1 — Python</div>
+          <div class="module-pill">Module 6 — Generative AI</div>
+          <div class="module-pill">Module 9 — Vector Databases</div>
+          <div class="module-pill">Module 10 — FastAPI</div>
+          <div class="module-pill highlight">Module 14 — Project Defense</div>
+        </div>
+        <div class="card-cta">
+          <span class="cta-text">14 Modules · Progress Tracked</span>
+          <span class="cta-arrow">→</span>
+        </div>
+      </a>
+
+    </div>
+
+    <div class="home-footer">Built for your battlefield. Every topic tracked. Every note saved. Go win. ⚔️</div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>StudyForge — Agentic AI Builder Prep</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <meta name="description" content="Agentic AI interview preparation tracker. LangChain, RAG, Vector DB, FastAPI and more." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=3" />
+  <style>
+    .back-link {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      font-size: 0.8rem; font-weight: 600; color: #64748b;
+      text-decoration: none; transition: color 0.2s;
+    }
+    .back-link:hover { color: #a78bfa; }
+  </style>
+</head>
+<body>
+
+  <div class="bg-canvas">
+    <div class="bg-grid"></div>
+    <div class="bg-orb orb-1" style="background:#f59e0b"></div>
+    <div class="bg-orb orb-2" style="background:#ec4899"></div>
+    <div class="bg-orb orb-3" style="background:#10b981"></div>
+  </div>
+
+  <header class="header" id="header">
+    <div class="header-inner">
+      <div class="logo">
+        <a href="home.html" class="back-link">← Home</a>
+        <span style="color:#334155;margin:0 0.5rem">|</span>
+        <span class="logo-icon">🧠</span>
+        <span class="logo-text">StudyForge</span>
+        <span class="logo-tag">Agentic AI</span>
+      </div>
+      <div class="header-center">
+        <div class="countdown-widget" id="countdownWidget">
+          <span class="countdown-label">Interview in</span>
+          <div class="countdown-timer" id="countdownTimer">
+            <span class="cd-block"><span class="cd-num" id="cdDays">--</span><span class="cd-unit">d</span></span>
+            <span class="cd-sep">:</span>
+            <span class="cd-block"><span class="cd-num" id="cdHours">--</span><span class="cd-unit">h</span></span>
+            <span class="cd-sep">:</span>
+            <span class="cd-block"><span class="cd-num" id="cdMins">--</span><span class="cd-unit">m</span></span>
+          </div>
+        </div>
+      </div>
+      <button class="btn-set-date" id="btnSetDate">📅 Set Interview Date</button>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="quote-section">
+      <div class="quote-card" id="quoteCard">
+        <div class="quote-mark">"</div>
+        <p class="quote-text" id="quoteText">Loading...</p>
+        <p class="quote-author" id="quoteAuthor">—</p>
+        <button class="btn-next-quote" id="btnNextQuote" title="Next Quote">↻</button>
+      </div>
+    </section>
+
+    <section class="dashboard">
+      <div class="dash-card dash-progress">
+        <div class="dash-label">Overall Progress</div>
+        <div class="progress-ring-wrap">
+          <svg class="progress-ring" width="110" height="110" viewBox="0 0 110 110">
+            <circle class="ring-bg" cx="55" cy="55" r="46" />
+            <circle class="ring-fill" id="overallRing" cx="55" cy="55" r="46" stroke-dasharray="289" stroke-dashoffset="289" />
+          </svg>
+          <div class="ring-label">
+            <span class="ring-pct" id="overallPct">0%</span>
+            <span class="ring-sub">done</span>
+          </div>
+        </div>
+      </div>
+      <div class="dash-card dash-stat">
+        <div class="stat-icon">✅</div>
+        <div class="stat-num" id="statTopicsDone">0</div>
+        <div class="stat-label">Topics Completed</div>
+        <div class="stat-total" id="statTopicsTotal">of 0</div>
+      </div>
+      <div class="dash-card dash-stat">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-num" id="statTimeSpent">0h</div>
+        <div class="stat-label">Time Studied</div>
+        <div class="stat-total" id="statTimeTotal">of 30h target</div>
+      </div>
+      <div class="dash-card dash-stat">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-num" id="statStreak">0</div>
+        <div class="stat-label">Day Streak</div>
+        <div class="stat-total">keep going!</div>
+      </div>
+      <div class="dash-card dash-stat">
+        <div class="stat-icon">📚</div>
+        <div class="stat-num" id="statPdfs">0</div>
+        <div class="stat-label">Notes Uploaded</div>
+        <div class="stat-total">PDFs</div>
+      </div>
+    </section>
+
+    <section class="modules-section">
+      <div class="section-header">
+        <h2 class="section-title">Agentic AI — 14 Modules</h2>
+        <div class="section-subtitle">Your resume already matches 80% of this JD. Go prove the rest.</div>
+      </div>
+      <div class="modules-grid" id="modulesGrid"></div>
+    </section>
+  </main>
+
+  <div class="panel-overlay" id="panelOverlay"></div>
+  <aside class="module-panel" id="modulePanel">
+    <div class="panel-header" id="panelHeader">
+      <button class="btn-close-panel" id="btnClosePanel">✕</button>
+      <div class="panel-title-wrap">
+        <span class="panel-emoji" id="panelEmoji"></span>
+        <div>
+          <h2 class="panel-title" id="panelTitle"></h2>
+          <p class="panel-desc" id="panelDesc"></p>
+        </div>
+      </div>
+      <div class="panel-meta">
+        <span class="panel-badge" id="panelPriority"></span>
+        <span class="panel-day" id="panelDay"></span>
+      </div>
+      <div class="panel-progress-bar-wrap">
+        <div class="panel-progress-info">
+          <span id="panelProgressLabel">0 / 0 topics</span>
+          <span id="panelProgressPct">0%</span>
+        </div>
+        <div class="panel-progress-bar">
+          <div class="panel-progress-fill" id="panelProgressFill"></div>
+        </div>
+      </div>
+      <div class="panel-time-info">
+        <span>⏱ Time: <strong id="panelTimeSpent">0 min</strong> / <strong id="panelTimeTarget">0 min</strong></span>
+        <div class="panel-time-bar">
+          <div class="panel-time-fill" id="panelTimeFill"></div>
+        </div>
+      </div>
+    </div>
+    <div class="panel-body" id="panelBody"></div>
+  </aside>
+
+  <div class="modal-overlay" id="pdfModalOverlay">
+    <div class="pdf-modal" id="pdfModal">
+      <div class="pdf-modal-header">
+        <h3 class="pdf-modal-title" id="pdfModalTitle">Notes</h3>
+        <button class="btn-close-modal" id="btnClosePdf">✕</button>
+      </div>
+      <div class="pdf-modal-body">
+        <iframe class="pdf-iframe" id="pdfIframe" src="" title="PDF Viewer"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="dateModalOverlay">
+    <div class="date-modal" id="dateModal">
+      <div class="date-modal-header">
+        <h3>📅 Set Interview Date & Time</h3>
+        <button class="btn-close-modal" id="btnCloseDateModal">✕</button>
+      </div>
+      <div class="date-modal-body">
+        <p>Enter your interview date and time to start the countdown.</p>
+        <input type="datetime-local" id="interviewDateInput" class="date-input" />
+        <button class="btn-primary" id="btnSaveDate">Save & Start Countdown</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="agentic.js"></script>
+</body>
+</html>
